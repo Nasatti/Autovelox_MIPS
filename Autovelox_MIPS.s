@@ -1,7 +1,7 @@
 .data
 
 	unsec:		.word 0x5F5E100 	#1s
-	mezzosec:	.word 0x4C4B40		#50ms
+	cinqms:		.word 0x2FAF080		#50ms
 	
 	cinquanta: 	.word 0x6DDAC0 		
 	cinquanacinque:	.word 0x63DC77 		
@@ -25,11 +25,14 @@
 main:
 	add $t2, $t2, $zero		#inizializzazione contatore
 	addi $t7, $zero,1
+	addi $t5, $zero,$zero		#contatore 50ms
 	lhu $s1, check1
 	lhu $s2, check2
 	lw $s3, cinquanta
 	lw $s4, cinquanacinque	
 	lw $s5, sessanta
+	lw $s6, cinqms
+	lw $s7, unsec
 
 
 Sensore1:
@@ -41,8 +44,8 @@ Sensore1:
 Sensore2:
 	lh $t0, I_O			#controlla riga 14 se macchina passata
 	and $t1, $t0, $s2
+	addi $t2, $t2, 4		#contatore per le 4 !!!!!istruzioni precedenti
 	beq $t1, $s2, Controllo
-	addi $t2, $t2, 3		#contatore per le 3 istruzioni precedenti
 	j Sensore2
 
 
@@ -50,17 +53,30 @@ Controllo:
 	#controllo velocità confrontando il numero di istruzioni
 
 	slt $t4, $t2, $s3
-	beq $t4, $t7, Impulso
+	beq $t4, $t7, Otturatore
 	j OO
 
-Impulso:
-	#ciclo 50 ms
-	j Otturatore
-
 Otturatore:
-	#ciclo 1 sec con controllo riga 7
-	j Sanzione
 	
+	#cosa fa la linea 7 fotocamera?caricata da noi codice o setvalue?
+	#sh 
+	j Attesa
+	
+Attesa:
+	addi $t5,$t5,2			#ciclo 1 sec apri
+	bne $t5, $s7, Attesa
+	addi $t5,$zero,$zero
+	j Impulso
+
+Impulso:
+	lh $t0, I_O
+	addi $t5,$t5,3			#ciclo 50 ms apri
+	bne $t5, $s6, Impulso
+	
+	#ciclo 1 sec con controllo riga 7
+
+	j Sanzione
+
 Sanzione:
 	slt $t4, $t2, $s5
 	beq $t4, $t7, II
