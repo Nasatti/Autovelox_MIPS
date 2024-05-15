@@ -87,7 +87,7 @@ Sanzione:
 
 
 OO:
-	j FINE
+	j reset #da fare
 II:
 
 OI:
@@ -100,9 +100,10 @@ IO:
 
 
 
-FINE:
+RitornaV:
 	#riporre tutto a zero
 
-
+reset:
+	j main
 
 
