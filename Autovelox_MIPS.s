@@ -44,66 +44,65 @@ Sensore1:
 Sensore2:
 	lh $t0, I_O			#controlla riga 14 se macchina passata
 	and $t1, $t0, $s2
-	addi $t2, $t2, 4		#contatore per le 4 !!!!!istruzioni precedenti
-	beq $t1, $s2, Controllo
+	addi $t2, $t2, 4		#contatore per le 4 istruzioni precedenti
+	beq $t1, $s2, Sanzione
 	j Sensore2
-
-
-Controllo:
-	#controllo velocità confrontando il numero di istruzioni
-
+	
+Sanzione:
+	slt $t4, $t2, $s5
+	beq $t4, $t7, II	#>60
+	slt $t4, $t2, $s4
+	beq $t4, $t7, IO	#>55
 	slt $t4, $t2, $s3
-	beq $t4, $t7, Otturatore
+	beq $t4, $t7, OI	#>50
 	j OO
 
-Otturatore:
-	
-	#cosa fa la linea 7 fotocamera?caricata da noi codice o setvalue?
-	#sh 
+OO:
+	j reset
+II				#salviamo la velocita
+	ori $t0, $t0, 0x3		
+	j RitornaV
+OI:
+	ori $t0, $t0, 0x1
+	j RitornaV
+IO:
+	ori $t0, $t0, 0x2
+	j RitornaV
+
+
+RitornaV:			#Ritorniamo la velosita(bit 1 e 0)
+	sh $t0, I_O
 	j Attesa
-	
+
 Attesa:
 	addi $t5,$t5,2			#ciclo 1 sec apri
 	bne $t5, $s7, Attesa
 	addi $t5,$zero,$zero
+				
+	ori $t0, $t0, 0x80 		#mette a 1 riga 7
+	sh $t0, I_O
 	j Impulso
+	
+
 
 Impulso:
-	lh $t0, I_O
-	addi $t5,$t5,3			#ciclo 50 ms apri
+	addi $t5,$t5,3			#ciclo 50 ms impulso
 	bne $t5, $s6, Impulso
 	
-	#ciclo 1 sec con controllo riga 7
-
+	andi $t0, $t0, 0xFF7F		#riporre 0 linea 7
+	sh $t0, I_O
 	j Sanzione
 
-Sanzione:
-	slt $t4, $t2, $s5
-	beq $t4, $t7, II
-	slt $t4, $t2, $s4
-	beq $t4, $t7, IO
-	slt $t4, $t2, $s3
-	beq $t4, $t7, OI
-
-
-OO:
-	j reset #da fare
-II:
-
-OI:
-
-IO:
 
 
 
-
-
-
-
-RitornaV:
-	#riporre tutto a zero
-
-reset:
+reset:					#ripatre il ciclo
+	add $t4, 0, 0
+	sh $t4, I_O
 	j main
 
 
+#velocità quando mandarla? prima di scattare la foto
+#andi tra registro e numero? --> and come farla? or
+#fotocamera mettiamo noi con set value o da codice automaticamente
+#flow chart --> draw.io
