@@ -1,14 +1,15 @@
 .data
 
+	I_O:	.half 0x0		#inizializzazione variabile a 16 bit
+	
 	unsec:		.word 0x5F5E100 	#1s
-	cinqms:		.word 0x2FAF080		#50ms
+	cinqms:		.word 0x04C4B40		#50ms
 	
 	cinquanta: 	.word 0x6DDAC0 		
 	cinquanacinque:	.word 0x63DC77 		
 	sessanta:	.word 0x5B88D0		
 
 
-	I_O:	.half 0x0	#inizializzazione variabile a 16 bit
 	
 	#I_O
 	#15--> primo sensore
@@ -25,9 +26,9 @@
 main:
 	add $t2, $t2, $zero		#inizializzazione contatore
 	addi $t7, $zero,1
-	addi $t5, $zero,$zero		#contatore 50ms
-	lhu $s1, check1
-	lhu $s2, check2
+	add $t5, $zero,$zero		#contatore 50ms
+	lh $s1, check1
+	lh $s2, check2
 	lw $s3, cinquanta
 	lw $s4, cinquanacinque	
 	lw $s5, sessanta
@@ -59,7 +60,7 @@ Sanzione:
 
 OO:
 	j reset
-II				#salviamo la velocita
+II:				#salviamo la velocita
 	ori $t0, $t0, 0x3		
 	j RitornaV
 OI:
@@ -77,7 +78,7 @@ RitornaV:			#Ritorniamo la velosita(bit 1 e 0)
 Attesa:
 	addi $t5,$t5,2			#ciclo 1 sec apri
 	bne $t5, $s7, Attesa
-	addi $t5,$zero,$zero
+	add $t5,$zero,$zero
 				
 	ori $t0, $t0, 0x80 		#mette a 1 riga 7
 	sh $t0, I_O
@@ -91,13 +92,13 @@ Impulso:
 	
 	andi $t0, $t0, 0xFF7F		#riporre 0 linea 7
 	sh $t0, I_O
-	j Sanzione
+	j reset
 
 
 
 
 reset:					#ripatre il ciclo
-	add $t4, 0, 0
+	add $t4, $zero, $zero
 	sh $t4, I_O
 	j main
 
