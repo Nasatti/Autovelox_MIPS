@@ -8,8 +8,8 @@ setvalue:	-indirizzo: 0x10010000
 setvalue:	-registro: $t2
 		-valore: 5998800	(x>60)
 			 6544403	(55<x<60)
-			 6544603	(50<x<55)
-			 116190784	(x<50)
+	       (7199424) 6544603	(50<x<55)
+			 116190784	(x<50)-------->? 
 			
 
 setvalue:	-indirizzo: 0x10010000
@@ -25,7 +25,7 @@ setvalue:	-registro: $t5
 controllo apertura otturatore linea 7:	0x0000c00x --> 0x0000c08x
 
 setvalue:	-registro: $t5
-		-valore: 4999991	(poco meno di 5 ms)
+		-valore: 4999991	(poco meno di 50 ms)
 
 controllo chiusura otturatore linea 7:	0x0000c08x --> 0x0000c00x
 
