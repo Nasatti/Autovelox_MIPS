@@ -1,0 +1,32 @@
+ESECUZIONE CODICE MIPS:
+
+BreakPoint: 0x00400024
+
+setvalue:	-indirizzo: 0x10010000
+		-valore: 32768		(riga 15 a 1)
+
+setvalue:	-registro: $t2
+		-valore: 5998800	(x>60)
+			 6544403	(55<x<60)
+			 6544603	(50<x<55)
+			 116190784	(x<50)
+			
+
+setvalue:	-indirizzo: 0x10010000
+		-valore: 49152		(riga 15 e 14 a 1)
+
+
+controllo velocità linea 1 e 0:	0x0000c000 --> 0x0000c00x	
+x -->	00	01	10	11 	(in base alla velocità)
+
+setvalue:	-registro: $t5
+		-valore: 99999990	(poco meno di 1 sec)
+		
+controllo apertura otturatore linea 7:	0x0000c00x --> 0x0000c08x
+
+setvalue:	-registro: $t5
+		-valore: 4999991	(poco meno di 5 ms)
+
+controllo chiusura otturatore linea 7:	0x0000c08x --> 0x0000c00x
+
+controllo reset I_O: 0x0
